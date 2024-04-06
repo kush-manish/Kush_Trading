@@ -1,10 +1,4 @@
-
-from passlib.context import CryptContext
-
-from schemas import UserInDB
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+from app.schema import UserInDB
 
 fake_users_db = {
     "mk": {
@@ -36,10 +30,3 @@ def get_user(db, username: str):
     if username in db:
         user_dict = db[username]
         return UserInDB(**user_dict)
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)

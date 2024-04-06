@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  oms:
+    build: ./oms
+    ports:
+      - "8000:8000"
+    restart: always
+  tes:
+    build: ./tes
+    ports:
+      - "8001:8001"
+    restart: always
+  mds:
+    build: ./mds
+    ports:
+      - "8002:8002"
+    restart: always
