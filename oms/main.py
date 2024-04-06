@@ -1,15 +1,13 @@
 import httpx
 from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 
-from app.models import OrderData
-from app.auth import authenticate_user, get_current_user
-from app.my_database import fake_users_db
-from app import auth
+from app.dependencies import get_current_user
+from app.routers import auth,orders
 
 app = FastAPI()
 app.include_router(auth.router)
+app.include_router(orders.router)
 
 @app.get("/")
 async def read_root():
@@ -39,16 +37,3 @@ async def create_order():
         return {"message": "Order created and sent to tes service successfully"}
     else:
         return {"message": "Failed to send order to tes service"}
-# Add CRUD endpoints here
-
-@app.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    # In a real application, return a secure token here
-    return {"access_token": user["username"], "token_type": "bearer"}
