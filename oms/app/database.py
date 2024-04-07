@@ -1,4 +1,5 @@
-
+orders = {}
+trades = {}
 fake_users_db = {
     "mk": {
         "username": "mk",

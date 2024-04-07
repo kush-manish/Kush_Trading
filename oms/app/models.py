@@ -34,6 +34,7 @@ class Order(BaseModel):
     price: condecimal( multiple_of=0.01)
 
 class OrderResponseLimited(BaseModel):
+    order_id: str = Field(..., alias="order_id")
     order_price: float = Field(..., alias="price")
     order_quantity: int = Field(..., alias="quantity")
     average_traded_price: Optional[float] = None
@@ -44,7 +45,7 @@ class Trade(BaseModel):
     trade_id: Optional[str] = None
     is_active: Optional[bool] = True
     ask_order_id: str
-    bid_order_id: int
-    qty: int
-    price: condecimal( multiple_of=0.01)
+    bid_order_id: str
+    quantity: int
+    price: float
     execution_timestamp: Optional[str] = None

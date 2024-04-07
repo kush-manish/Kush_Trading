@@ -12,15 +12,15 @@ async def read_root():
     return {"Hello": count}
 
 @app.post("/kafka/kafka-process-order-trade")
-async def process_order_trade(order_data: OrderData):
+async def process_order_trade(order_data: dict):
     # Process the order here
     # For example, print the received order data
     count['X'] = 1;
     print(count)
-    print(f"Processing order & trade {order_data.order_id} ")
+    print(f"Processing order & trade {order_data} ")
     # Implement your logic here
 
-    return {"message": "Order Trade processed successfully", "order_id": order_data.order_id}
+    return {"message": "Order Trade processed successfully", "order_id": order_data['data'].order_id}
 
 
 # Add CRUD endpoints here
