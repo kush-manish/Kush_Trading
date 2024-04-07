@@ -1,3 +1,7 @@
 fastapi
-uvicorn
-aiokafka
+uvicorn[standard]
+httpx
+passlib
+python-jose
+python-multipart
+websockets

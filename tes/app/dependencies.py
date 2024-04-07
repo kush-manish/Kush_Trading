@@ -4,20 +4,24 @@ import uuid
 from datetime import datetime
 import httpx
 from fastapi import FastAPI
-from models import OrderData, order_with_price
+from .models import OrderData, order_with_price
 import heapq
 
-from database import sell_orders,buy_orders
+from .database import sell_orders,buy_orders
 
 # Min heap for buy orders and max heap for sell orders
 
 
 
-async def push_message_to_oms(data: dict):
+async def push_message_to_oms_and_mds(data: dict):
     # URL of the tes service endpoint
     oms_service_url = "http://oms:8000/kafka/kafka-trade-done"
     async with httpx.AsyncClient() as client:
         response = await client.post(oms_service_url, json=data)
+
+    mds_service_url = "http://mds:8002/kafka/kafka-order-trade-happened"
+    async with httpx.AsyncClient() as client:
+        response = await client.post(mds_service_url, json=data)
 
 
 async def match_order(order):
@@ -88,7 +92,7 @@ async def match_order(order):
                 heapq.heappush(sell_orders, order_with_price(order, order["price"]))
 
     if message:
-        await push_message_to_oms(message)
+        await push_message_to_oms_and_mds(message)
 
 
 
