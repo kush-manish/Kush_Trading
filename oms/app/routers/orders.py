@@ -64,7 +64,7 @@ async def fetch_order(order_id: str, current_user: TokenData = Depends(get_curre
     if (current_user.username not in orders or order_id not in orders[current_user.username]):
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return orders[current_user.username][order_id]
+    return OrderResponseLimited.from_order(orders[current_user.username][order_id])
 
 
 @router.get("/orders", dependencies=[Depends(get_current_user)], response_model=List[OrderResponseLimited])
@@ -72,7 +72,7 @@ async def fetch_all_order(current_user: TokenData = Depends(get_current_user)):
     if (current_user.username not in orders):
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return orders[current_user.username].values()
+    return [OrderResponseLimited.from_order(order) for order in orders[current_user.username].values()]
 
 
 

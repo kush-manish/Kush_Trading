@@ -45,7 +45,7 @@ async def match_order(order):
                         "bid_order":order,
                         "ask_order":best_sell.data,
                         "timestamp":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        "price": best_sell.price, # this amount need to be pay
+                        "price": order["price"], # this amount need to be pay
                         "trade_quantity": traded_quantity
                     }
 
@@ -77,7 +77,7 @@ async def match_order(order):
                         "bid_order": best_buy.data,
                         "ask_order": order,
                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        "price": -best_buy.price, # this amount need to be pay
+                        "price": order["price"], # this amount need to be pay
                         "trade_quantity": traded_quantity
                     }
 

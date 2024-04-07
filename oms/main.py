@@ -1,8 +1,5 @@
-import httpx
-from fastapi import FastAPI
-from fastapi import Depends
 
-from app.dependencies import get_current_user
+from fastapi import FastAPI
 from app.routers import auth,orders,kafka,trades
 
 

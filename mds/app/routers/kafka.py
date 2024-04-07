@@ -4,8 +4,6 @@ from fastapi import FastAPI, WebSocket, Depends, BackgroundTasks, APIRouter
 router = APIRouter()
 @router.post("/kafka/kafka-order-trade-happened")
 async def order_trade_happened(trade_data: dict):
-    # Process the order here
-    # For example, print the received order data
 
     for key in trade_data.keys():
         trade = trade_data[key]

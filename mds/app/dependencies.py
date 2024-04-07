@@ -1,6 +1,8 @@
 import asyncio
 from datetime import datetime
 
+import httpx
+
 from .database import order_book_snapshot, active_websockets
 
 
@@ -10,6 +12,20 @@ async def send_notifications(message: dict, user_id: str):
         await websocket.send_text(str(message))
     except:
         pass
+
+async def fetch_order_book_snapshot():
+
+    oms_service_url = "http://tes:8001/orderbook/top5"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(oms_service_url)
+
+        return {
+            "bid": [{"price":obj.get("data",{}).get("price",-1), "qty": obj.get("data",{}).get("quantity",-1)} for obj in response.json().get("buys", [])],
+            "ask": [{"price":obj.get("data",{}).get("price",-1), "qty": obj.get("data",{}).get("quantity",-1)} for obj in response.json().get("sells", [])]
+        }
+
+
 async def update_order_book_snapshot():
     while True:
         # Fetch the latest order book snapshot
@@ -19,25 +35,6 @@ async def update_order_book_snapshot():
         # Wait for 0.5 seconds before fetching the next snapshot
         await asyncio.sleep(0.5)
 
-async def fetch_order_book_snapshot():
-
-    return {
-        "updated": datetime.utcnow().isoformat(),
-        "bid": [
-            {"price": 100.0, "quantity": 10},
-            {"price": 99.5, "quantity": 15},
-            {"price": 99.0, "quantity": 20},
-            {"price": 98.5, "quantity": 25},
-            {"price": 98.0, "quantity": 30}
-        ],
-        "ask": [
-            {"price": 101.0, "quantity": 10},
-            {"price": 101.5, "quantity": 15},
-            {"price": 102.0, "quantity": 20},
-            {"price": 102.5, "quantity": 25},
-            {"price": 103.0, "quantity": 30}
-        ]
-    }
 
 
 

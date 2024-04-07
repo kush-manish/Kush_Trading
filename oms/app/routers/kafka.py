@@ -24,12 +24,6 @@ async def trade_done(order_data: dict):
     # For example, print the received order data
     for trade_id in order_data:
         trade = order_data[trade_id]
-        #
-        # "bid_order": order,
-        # "ask_order": best_sell.data,
-        # "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        # "price": best_sell,  # this amount need to be pay
-        # "trade_quantity": traded_quantity
 
         trades[trade_id] = {
             "trade_id":trade_id,
@@ -44,6 +38,9 @@ async def trade_done(order_data: dict):
         # bid
         bid_user_id = trade["bid_order"]['user_id']
         bid_order_id = trade["bid_order"]['order_id']
+        trade_quantity = orders[bid_user_id][bid_order_id]['quantity'] - trade["bid_order"]['quantity']
+        orders[bid_user_id][bid_order_id]['traded_quantity'] += trade_quantity
+        orders[bid_user_id][bid_order_id]['traded_price'] += trade_quantity*order_data[trade_id]["price"]
         orders[bid_user_id][bid_order_id]['quantity'] = trade["bid_order"]['quantity']
         if(trade["bid_order"]['quantity'] == 0):
             orders[bid_user_id][bid_order_id]['is_active'] = False
@@ -51,6 +48,9 @@ async def trade_done(order_data: dict):
         # ask
         ask_user_id = trade["ask_order"]['user_id']
         ask_order_id = trade["ask_order"]['order_id']
+        trade_quantity = orders[ask_user_id][ask_order_id]['quantity'] - trade["ask_order"]['quantity']
+        orders[ask_user_id][ask_order_id]['traded_quantity'] += trade_quantity
+        orders[ask_user_id][ask_order_id]['traded_price'] += trade_quantity * order_data[trade_id]["price"]
         orders[ask_user_id][ask_order_id]['quantity'] = trade["ask_order"]['quantity']
         if (trade["ask_order"]['quantity'] == 0):
             orders[ask_user_id][ask_order_id]['is_active'] = False
