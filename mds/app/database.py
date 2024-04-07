@@ -1,3 +1,6 @@
+from typing import Dict, List
+from fastapi import FastAPI, WebSocket, Depends, BackgroundTasks
+
 fake_users_db = {
     "mk": {
         "username": "mk",
@@ -24,4 +27,16 @@ fake_users_db = {
         "disabled": False,
     }
 }
+
+order_book_snapshot: Dict[str, List[Dict[str, float]]] = {
+    "bid": [],
+    "ask": []
+}
+
+order_book_snapshot: Dict[str, List[Dict[str, float]]] = {
+    "bid": [],
+    "ask": []
+}
+
+active_websockets: List[WebSocket] = {}
 
